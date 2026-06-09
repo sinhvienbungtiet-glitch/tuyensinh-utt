@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cổng Tra Cứu Tuyển Sinh 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary-navy: #002147;     
+      --accent-orange: #f26f21;    
+      --bg-white: #ffffff;         
+      --bg-light: #f4f6f9;         
+      --text-dark: #1c2a38;
+      --success-color: #2e7d32;    
+      --danger-color: #c62828;     
+      --neutral-color: #333333;    
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Roboto', sans-serif; background-color: var(--bg-light); color: var(--text-dark); padding: 15px; display: flex; justify-content: center; min-height: 100vh; }
+
+    .app-container { width: 100%; max-width: 900px; background: var(--bg-white); border-radius: 12px; box-shadow: 0 8px 30px rgba(0,33,71,0.12); overflow: hidden; margin-top: 10px; height: fit-content; display: flex; flex-direction: column; }
+    
+    .app-header { background-color: var(--primary-navy); color: #ffffff; padding: 30px 20px; text-align: center; border-bottom: 5px solid var(--accent-orange); }
+    .app-header h1 { font-family: 'Montserrat', sans-serif; font-size: 24px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .app-header p { font-size: 14px; margin-top: 6px; opacity: 0.9; font-weight: 400; }
+    
+    .panel-body { padding: 25px 20px; flex: 1; }
+    .hidden { display: none !important; }
+    
+    fieldset { border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin-bottom: 20px; background: #fafafa; }
+    legend { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px; color: var(--primary-navy); padding: 0 10px; text-transform: uppercase; border-left: 3px solid var(--accent-orange); }
+    
+    .form-group { margin-bottom: 18px; }
+    .form-row { display: flex; gap: 15px; flex-wrap: wrap; }
+    .form-row .form-group { flex: 1; min-width: 200px; }
+    
+    label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 14px; color: #475467; }
+    input[type="text"], input[type="number"], select { width: 100%; padding: 12px 14px; border: 1px solid #d0d5dd; border-radius: 6px; font-size: 15px; outline: none; transition: all 0.2s; background: #ffffff; }
+    input:focus, select:focus { border-color: var(--accent-orange); box-shadow: 0 0 0 3px rgba(242,111,33,0.15); }
+    
+    button.btn-block { width: 100%; padding: 14px; border: none; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; transition: background 0.2s; display: inline-flex; justify-content: center; align-items: center; gap: 8px; }
+    button.btn-primary { background-color: var(--accent-orange); color: #ffffff; }
+    button.btn-primary:hover { background-color: #d95a14; }
+    
+    .status-msg { font-size: 14px; font-weight: 600; margin-top: 10px; text-align: center; }
+    .status-msg.error { color: var(--danger-color); }
+    .status-msg.info { color: var(--primary-navy); }
+    
+    .user-profile { display: flex; justify-content: space-between; align-items: center; background: #eef4fa; padding: 12px 15px; border-radius: 6px; margin-bottom: 20px; border-left: 4px solid var(--primary-navy); }
+    .user-info { font-size: 14px; font-weight: 500; }
+    .btn-logout { background: transparent; border: none; color: var(--danger-color); cursor: pointer; font-size: 13px; font-weight: 600; }
+    
+    .tabs-container { display: flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 15px; gap: 4px; overflow-x: auto; }
+    .tab-item { padding: 12px 16px; border: none; background: transparent; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; color: #64748b; white-space: nowrap; border-bottom: 3px solid transparent; transition: all 0.2s; }
+    .tab-item.active { color: var(--accent-orange); border-bottom-color: var(--accent-orange); background: rgba(242,111,33,0.05); border-top-left-radius: 4px; border-top-right-radius: 4px; }
+    
+    .search-box { position: relative; margin-bottom: 15px; }
+    .search-box i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+    .search-box input { padding-left: 38px; }
+    
+    .table-responsive { width: 100%; max-height: 480px; overflow-y: auto; overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 8px; background: #ffffff; }
+    table { width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; font-size: 14px; min-width: 600px; }
+    th { position: sticky; top: 0; z-index: 10; background-color: #f8fafc; color: var(--primary-navy); font-weight: 700; padding: 12px 14px; border-bottom: 2px solid #e2e8f0; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; }
+    td { padding: 12px 14px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; line-height: 1.4; background: #ffffff; }
+    tr:hover td { background-color: #f8fafc; }
+    
+    .col-stt { width: 50px; font-weight: bold; color: #64748b; text-align: center; }
+    .col-ma { font-weight: 600; color: var(--primary-navy); }
+    
+    .score-pos { color: var(--success-color); font-weight: bold; }
+    .score-neg { color: var(--danger-color); font-weight: bold; }
+    .score-zero { color: var(--neutral-color); font-weight: bold; }
+
+    .footer-notice { background-color: #fffaf0; border: 1px dashed #f26f21; border-radius: 8px; padding: 15px; margin-top: 20px; display: flex; gap: 12px; align-items: flex-start; }
+    .footer-notice i { color: var(--accent-orange); font-size: 18px; margin-top: 2px; }
+    .footer-notice p { font-size: 13.5px; line-height: 1.5; color: #7c5e10; font-weight: 500; }
+    .footer-notice strong { color: #c05616; }
+
+    @media (max-width: 600px) {
+      body { padding: 5px; }
+      .app-header { padding: 20px 15px; }
+      .app-header h1 { font-size: 18px; }
+      .panel-body { padding: 15px 10px; }
+      fieldset { padding: 12px; }
+      .tab-item { padding: 10px 12px; font-size: 12px; flex: 1; text-align: center; }
+      .table-responsive { max-height: 380px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <div class="app-header">
+    <h1>Trường ĐH Công nghệ Giao thông Vận tải</h1>
+    <p>Công cụ phân tích cơ hội trúng tuyển phương thức xét học bạ năm 2026</p>
+  </div>
+
+  <div class="panel-body">
+    <div id="view-auth">
+      <fieldset>
+        <legend>Xác thực tài khoản thí sinh</legend>
+        <div class="form-group">
+          <label for="txt-cccd"><i class="fa-solid fa-id-card"></i> Nhập số CCCD/CMND:</label>
+          <input type="text" id="txt-cccd" placeholder="Nhập số định danh của bạn để bắt đầu...">
+        </div>
+        <button class="btn-block btn-primary" onclick="xuLyXacThuc()">
+          <i class="fa-solid fa-right-to-bracket"></i> ĐĂNG NHẬP HỆ THỐNG
+        </button>
+        <p id="msg-auth" class="status-msg error"></p>
+      </fieldset>
+    </div>
+
+    <div id="view-main" class="hidden">
+      <div class="user-profile">
+        <div class="user-info" id="lbl-profile">Thí sinh: </div>
+        <button class="btn-logout" onclick="dangXuat()"><i class="fa-solid fa-right-from-bracket"></i> Rời khỏi</button>
+      </div>
+      
+      <fieldset>
+        <legend>Thông tin tính toán điểm xét tuyển (Theo dữ liệu thí sinh cung cấp)</legend>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="txt-diem"><i class="fa-solid fa-calculator"></i> Điểm xét Học bạ (tra cứu trong tài khoản của hệ thống đăng ký dự tuyển):</label>
+            <input type="number" id="txt-diem" step="0.01" min="18" max="30" placeholder="Nhập số điểm từ 18.00 đến 30.00">
+          </div>
+          <div class="form-group">
+            <label for="sl-tohop"><i class="fa-solid fa-layer-group"></i> Chọn Tổ hợp môn xét tuyển:</label>
+            <select id="sl-tohop">
+              <option value="A00">A00: Toán, Vật lí, Hóa học</option>
+              <option value="A01">A01: Toán, Vật lí, Tiếng Anh</option>
+              <option value="C00">C00: Ngữ văn, Lịch sử, Địa lí</option>
+              <option value="C01">C01: Toán, Ngữ văn, Vật lí</option>
+              <option value="C02">C02: Toán, Ngữ văn, Hóa học</option>
+              <option value="C03">C03: Toán, Ngữ văn, Lịch sử</option>
+              <option value="C04">C04: Toán, Ngữ văn, Địa lí</option>
+              <option value="D01">D01: Toán, Ngữ văn, Tiếng Anh</option>
+              <option value="D07">D07: Toán, Hóa học, Tiếng Anh</option>
+              <option value="X01">X01: Tổ hợp môn năng khiếu/đặc thù 1</option>
+              <option value="X02">X02: Tổ hợp môn năng khiếu/đặc thù 2</option>
+              <option value="X03">X03: Tổ hợp môn năng khiếu/đặc thù 3</option>
+              <option value="X25">X25: Tổ hợp xét tuyển chứng chỉ tiếng Anh</option>
+              <option value="X26">X26: Tổ hợp xét tuyển chứng chỉ tin học</option>
+              <option value="X27">X27: Tổ hợp xét tuyển chứng chỉ quốc tế</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-block btn-primary" onclick="xuLyTraCuuCucBo()">
+          <i class="fa-solid fa-magnifying-glass-chart"></i> BẮT ĐẦU PHÂN TÍCH CƠ HỘI
+        </button>
+        <p id="msg-main" class="status-msg error"></p>
+      </fieldset>
+
+      <div id="section-results" class="hidden">
+        <div class="tabs-container">
+          <button class="tab-item active" id="tab-ratCao" onclick="doiTab('ratCao')">Cơ hội rất cao (0)</button>
+          <button class="tab-item" id="tab-cao" onclick="doiTab('cao')">Cơ hội cao (0)</button>
+          <button class="tab-item" id="tab-coHoi" onclick="doiTab('coHoi')">Có cơ hội (0)</button>
+        </div>
+
+        <div class="search-box">
+          <i class="fa-solid fa-search"></i>
+          <input type="text" id="txt-search" placeholder="Gõ tên ngành hoặc mã xét tuyển để lọc nhanh..." onkeyup="locDuLieuBang()">
+        </div>
+
+        <div class="table-responsive">
+          <table id="tbl-data">
+            <thead>
+              <tr>
+                <th class="col-stt">STT</th>
+                <th>Mã XT</th>
+                <th>Chương Trình / Chuyên Ngành Xét Tuyển</th>
+                <th>Ngành / Mã Ngành</th>
+                <th>Điểm Chuẩn 2025 (Chênh lệch)</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-data"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-notice">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <p><strong>Lưu ý quan trọng:</strong> Thí sinh phải ĐKXT chính thức trên hệ thống Quốc gia theo quy định từ ngày <strong>02/7</strong> đến 17h00 ngày <strong>14/7/2026</strong>.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // DÁN ĐƯỜNG DẪN URL APP SCRIPT CỦA BẠN VÀO GIỮA HAI DẤU NHÁY ĐƠN DƯỚI ĐÂY:
+  var GOOGLE_API_URL = 'URL_WEB_APP_GOOGLE_CỦA_BẠN'; 
+
+  var DANH_SACH_NGANH_GOC = []; 
+  var storeDataKetQua = null;
+  var currentTabActive = 'ratCao';
+
+  /**
+   * KẾT NỐI API ĐĂNG NHẬP QUA PHƯƠNG THỨC FETCH POST
+   */
+  function xuLyXacThuc() {
+    var cccd = document.getElementById("txt-cccd").value.trim();
+    var msg = document.getElementById("msg-auth");
+    if(!cccd) { msg.innerText = "Vui lòng nhập số CCCD!"; return; }
+    
+    msg.className = "status-msg info";
+    msg.innerText = "Đang kết nối xác thực tài khoản...";
+    
+    fetch(GOOGLE_API_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "dangNhap", cccd: cccd })
+    })
+    .then(response => response.json())
+    .then(res => {
+      if(res.hopLe) {
+        msg.innerText = "Đăng nhập thành công! Đang tải cấu trúc dữ liệu ngành từ Excel...";
+        
+        // Gọi tiếp API lấy toàn bộ danh sách ngành
+        taiToanBoNganhTienTrinh(res.hoTen, cccd);
+      } else {
+        msg.className = "status-msg error"; msg.innerText = res.message;
+      }
+    })
+    .catch(error => {
+      msg.className = "status-msg error"; msg.innerText = "Lỗi kết nối máy chủ dữ liệu! Hãy kiểm tra lại cấu hình URL.";
+    });
+  }
+
+  function taiToanBoNganhTienTrinh(hoTen, cccd) {
+    var msg = document.getElementById("msg-auth");
+    
+    fetch(GOOGLE_API_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "taiDanhSachNganh" })
+    })
+    .then(response => response.json())
+    .then(res => {
+      if(res.hopLe) {
+        DANH_SACH_NGANH_GOC = res.data; // Lưu dữ liệu vào bộ nhớ đệm RAM trình duyệt thí sinh
+        msg.innerText = "";
+        document.getElementById("view-auth").classList.add("hidden");
+        document.getElementById("view-main").classList.remove("hidden");
+        document.getElementById("lbl-profile").innerHTML = '<i class="fa-solid fa-user-grad"></i> Thí sinh: <b>' + hoTen + '</b> | CCCD: ' + cccd;
+      } else {
+        msg.className = "status-msg error"; msg.innerText = "Không thể tải danh sách ngành.";
+      }
+    })
+    .catch(error => {
+      msg.className = "status-msg error"; msg.innerText = "Trục trặc trong quá trình tải bảng dữ liệu.";
+    });
+  }
+
+  /**
+   * KIỂM TRA ĐIỀU KIỆN VÀ LÀM TRÒN ĐIỂM SỐ CHÍNH XÁC CỤC BỘ
+   */
+  function xuLyTraCuuCucBo() {
+    var txtDiem = document.getElementById("txt-diem");
+    var toHopInput = document.getElementById("sl-tohop").value;
+    var msg = document.getElementById("msg-main");
+    
+    var rawDiem = parseFloat(txtDiem.value);
+    
+    // ĐIỀU KIỆN GIỚI HẠN TỪ 18 ĐẾN 30 ĐIỂM
+    if (isNaN(rawDiem) || rawDiem < 18 || rawDiem > 30) { 
+      msg.className = "status-msg error";
+      msg.innerText = "Điểm số không hợp lệ! Điểm xét tuyển học bạ phải nằm trong khoảng từ 18.00 đến 30.00 điểm."; 
+      document.getElementById("section-results").classList.add("hidden");
+      return; 
+    }
+    
+    // TỰ ĐỘNG LÀM TRÒN ĐIỂM THÀNH 2 SỐ SAU DẤU THẬP PHÂN
+    var diem = parseFloat(rawDiem.toFixed(2));
+    txtDiem.value = diem; // Trả lại số đẹp đã làm tròn lên màn hình
+    
+    msg.innerText = "";
+    
+    var ketQua = { ratCao: [], cao: [], coHoi: [] };
+    var regex = new RegExp("\\b" + toHopInput.trim() + "\\b", "i");
+    
+    for (var i = 0, len = DANH_SACH_NGANH_GOC.length; i < len; i++) {
+      var nganh = DANH_SACH_NGANH_GOC[i];
+      if (regex.test(nganh.toHop)) {
+        var chenhLech = parseFloat((diem - nganh.diemChuan).toFixed(2));
+        
+        if (chenhLech < -1.5) continue; // Ngưỡng biên: Thiếu quá 1.5 điểm sẽ ẩn
+        
+        var nganhInfo = {
+          maXT: nganh.maXT,
+          tenChuongTrinh: nganh.tenChuongTrinh,
+          nganhMaNganh: nganh.nganhMaNganh,
+          diemChuan: nganh.diemChuan,
+          chenhLech: chenhLech
+        };
+        
+        if (chenhLech >= 0.5) ketQua.ratCao.push(nganhInfo);
+        else if (chenhLech >= -0.5 && chenhLech < 0.5) ketQua.cao.push(nganhInfo);
+        else if (chenhLech < -0.5) ketQua.coHoi.push(nganhInfo);
+      }
+    }
+    
+    storeDataKetQua = ketQua;
+    document.getElementById("section-results").classList.remove("hidden");
+    document.getElementById("tab-ratCao").innerText = "Cơ hội rất cao (" + ketQua.ratCao.length + ")";
+    document.getElementById("tab-cao").innerText = "Cơ hội cao (" + ketQua.cao.length + ")";
+    document.getElementById("tab-coHoi").innerText = "Có cơ hội (" + ketQua.coHoi.length + ")";
+    
+    document.getElementById("txt-search").value = "";
+    doiTab('ratCao');
+  }
+
+  function doiTab(tenTab) {
+    currentTabActive = tenTab;
+    document.getElementById("tab-ratCao").classList.remove("active");
+    document.getElementById("tab-cao").classList.remove("active");
+    document.getElementById("tab-coHoi").classList.remove("active");
+    document.getElementById("tab-" + tenTab).classList.add("active");
+    hienThiDuLieuLenBang(storeDataKetQua[tenTab]);
+  }
+
+  function hienThiDuLieuLenBang(danhSachRecords) {
+    var tbody = document.getElementById("tbody-data");
+    if(!danhSachRecords || danhSachRecords.length === 0) {
+      tbody.innerHTML = "<tr><td colspan='5' style='text-align:center; padding: 30px; color:#64748b;'>Không có ngành/chuyên ngành nào phù hợp với mức cơ hội này.</td></tr>";
+      return;
+    }
+    
+    var len = danhSachRecords.length;
+    var rowsHtml = new Array(len);
+    for(var i = 0; i < len; i++) {
+      var item = danhSachRecords[i];
+      var textChenhLech = item.chenhLech > 0 ? " (+" + item.chenhLech + ")" : (item.chenhLech < 0 ? " (" + item.chenhLech + ")" : " (0.0)");
+      var classMau = item.chenhLech > 0 ? "score-pos" : (item.chenhLech < 0 ? "score-neg" : "score-zero");
+      
+      rowsHtml[i] = "<tr>" +
+                      "<td class='col-stt'>" + (i + 1) + "</td>" +
+                      "<td class='col-ma'>" + item.maXT + "</td>" +
+                      "<td><b>" + item.tenChuongTrinh + "</b></td>" +
+                      "<td>" + item.nganhMaNganh + "</td>" +
+                      "<td>" + item.diemChuan + "<span class='" + classMau + "'>" + textChenhLech + "</span></td>" +
+                    "</tr>";
+    }
+    tbody.innerHTML = rowsHtml.join('');
+  }
+
+  function locDuLieuBang() {
+    var chuoiTimKiem = document.getElementById("txt-search").value.toLowerCase().trim();
+    var toanBoDanhSach = storeDataKetQua[currentTabActive];
+    if(!chuoiTimKiem) { hienThiDuLieuLenBang(toanBoDanhSach); return; }
+
+    var danhSachSauLoc = [];
+    for(var i = 0, len = toanBoDanhSach.length; i < len; i++) {
+      var nganh = toanBoDanhSach[i];
+      if(nganh.tenChuongTrinh.toLowerCase().indexOf(chuoiTimKiem) > -1 || nganh.nganhMaNganh.toLowerCase().indexOf(chuoiTimKiem) > -1 || nganh.maXT.toLowerCase().indexOf(chuoiTimKiem) > -1) {
+        danhSachSauLoc.push(nganh);
+      }
+    }
+    hienThiDuLieuLenBang(danhSachSauLoc);
+  }
+
+  function dangXuat() {
+    document.getElementById("txt-cccd").value = "";
+    document.getElementById("txt-diem").value = "";
+    DANH_SACH_NGANH_GOC = [];
+    document.getElementById("section-results").classList.add("hidden");
+    document.getElementById("view-main").classList.add("hidden");
+    document.getElementById("view-auth").classList.remove("hidden");
+    document.getElementById("msg-auth").innerText = "";
+    document.getElementById("msg-main").innerText = "";
+  }
+</script>
+</body>
+</html>
